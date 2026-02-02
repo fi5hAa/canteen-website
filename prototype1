@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Canteen Ordering App</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f2f5;
+        padding: 20px;
+      }
+
+      h1,
+      h2 {
+        text-align: center;
+      }
+
+      .page {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 900px;
+        margin: 20px auto;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+      }
+
+      .card {
+        background: white;
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+      }
+
+      .card img {
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      button {
+        margin-top: 6px;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #2563eb;
+        color: white;
+        font-size: 15px;
+      }
+
+      button.back {
+        background: #555;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 6px 0;
+      }
+
+      .qty-controls button {
+        background: #e5e7eb;
+        color: black;
+        padding: 4px 8px;
+        margin: 0 6px;
+      }
+
+      .cart-btn {
+        width: 100%;
+        margin-bottom: 15px;
+        background: #16a34a;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>🍽️ Canteen Ordering System</h1>
+
+    <!-- HOME -->
+    <div class="page" id="homePage">
+      <button class="cart-btn" onclick="goCartFromHome()">
+        🛒 View Cart (<span id="cartCount">0</span> items)
+      </button>
+
+      <input
+        id="homeSearch"
+        placeholder="Search food..."
+        onkeyup="searchFood()"
+      />
+
+      <h2>Select Category</h2>
+      <div class="grid">
+        <button onclick="openMenu('japanese')">🇯🇵 Japanese</button>
+        <button onclick="openMenu('western')">🍝 Western</button>
+        <button onclick="openMenu('chinese')">🥡 Chinese</button>
+        <button onclick="openMenu('malay')">🍛 Malay</button>
+        <button onclick="openMenu('snacks')">🍟 Snacks</button>
+      </div>
+
+      <br />
+      <button onclick="openHistory()">📜 Order History</button>
+    </div>
+
+    <!-- SEARCH RESULTS -->
+    <div class="page hidden" id="searchPage">
+      <button class="back" onclick="backHome()">⬅ Back</button>
+      <h2>🔍 Search Results</h2>
+      <div class="grid" id="searchResults"></div>
+    </div>
+
+    <!-- MENU -->
+    <div class="page hidden" id="menuPage">
+      <button class="back" onclick="backHome()">⬅ Back</button>
+      <h2 id="menuTitle"></h2>
+      <div class="grid" id="foodList"></div>
+      <button onclick="goCart()">🛒 View Cart</button>
+    </div>
+
+    <!-- CART -->
+    <div class="page hidden" id="cartPage">
+      <button class="back" onclick="backHome()">⬅ Back</button>
+      <h2>🛒 Cart</h2>
+      <div id="cartItems"></div>
+      <h3>Total: SGD <span id="total">0.00</span></h3>
+      <button onclick="goPayment()">Pay</button>
+    </div>
+
+    <!-- PAYMENT -->
+    <div class="page hidden" id="paymentPage">
+      <button class="back" onclick="backToCart()">⬅ Back</button>
+      <h2>💳 Payment</h2>
+      <div id="paymentItems"></div>
+      <h3>Total: SGD <span id="payTotal"></span></h3>
+
+      <label
+        ><input type="radio" name="payMethod" value="Cash" checked />
+        Cash</label
+      ><br />
+      <label
+        ><input type="radio" name="payMethod" value="PayNow" /> PayNow</label
+      ><br />
+      <label><input type="radio" name="payMethod" value="Card" /> Card</label
+      ><br /><br />
+
+      <button onclick="confirmPayment()">Confirm Payment</button>
+    </div>
+
+    <script>
+      const foods = {
+        japanese: [
+          { name: "Takoyaki", price: 4.9, img: "/images/takoyaki.jpg" },
+          { name: "Ramen", price: 6.5, img: "/images/ramen.jpg" },
+        ],
+        western: [
+          { name: "Spaghetti", price: 3.7, img: "/images/spagethi.jpg" },
+          {
+            name: "Chicken Burger with Fries",
+            price: 5.5,
+            img: "/images/chicken burger with fries.jpg",
+          },
+        ],
+        chinese: [
+          { name: "Chicken Rice", price: 3.2, img: "/images/chicken rice.jpg" },
+          { name: "Wonton Noodle", price: 4.8, img: "/images/wonton.jpg" },
+        ],
+        malay: [
+          { name: "Mee Rebus", price: 2.7, img: "/images/mee rebus.jpg" },
+          { name: "Nasi Lemak", price: 3.5, img: "/images/nasi.jpg" },
+        ],
+        snacks: [
+          { name: "Chocolate Waffle", price: 3.2, img: "/images/waffle.jpg" },
+          { name: "Fries", price: 2.5, img: "/images/fries.jpg" },
+        ],
+      };
+
+      let cart = {};
+
+      function updateCartCount() {
+        let c = 0;
+        for (let i in cart) c += cart[i].qty;
+        cartCount.textContent = c;
+      }
+
+      function searchFood() {
+        const q = homeSearch.value.toLowerCase().trim();
+        if (!q) return;
+
+        homePage.classList.add("hidden");
+        searchPage.classList.remove("hidden");
+        searchResults.innerHTML = "";
+
+        for (let cat in foods) {
+          foods[cat].forEach((f) => {
+            if (f.name.toLowerCase().startsWith(q)) {
+              let qty = cart[f.name] ? cart[f.name].qty : 0;
+              searchResults.innerHTML += `
+                <div class="card">
+                  <img src="${f.img}">
+                  <h3>${f.name}</h3>
+                  <p>SGD ${f.price.toFixed(2)}</p>
+                  <div class="qty-controls">
+                    <button onclick="updateItem('${f.name}', ${
+                f.price
+              }, -1)">➖</button>
+                    <b>${qty}</b>
+                    <button onclick="updateItem('${f.name}', ${
+                f.price
+              }, 1)">➕</button>
+                  </div>
+                </div>
+              `;
+            }
+          });
+        }
+
+        updateCartCount();
+      }
+
+      function updateItem(name, price, change) {
+        if (!cart[name] && change > 0) cart[name] = { price, qty: 0 };
+        if (cart[name]) {
+          cart[name].qty += change;
+          if (cart[name].qty <= 0) delete cart[name];
+        }
+        searchFood();
+      }
+
+      function goCartFromHome() {
+        homePage.classList.add("hidden");
+        cartPage.classList.remove("hidden");
+      }
+
+      function backHome() {
+        searchPage.classList.add("hidden");
+        cartPage.classList.add("hidden");
+        homePage.classList.remove("hidden");
+      }
+    </script>
+  </body>
+</html>
