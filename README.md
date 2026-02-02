@@ -1,25 +1,30 @@
-Hi! I’m a second-year student studying **Cyber & Network Security** at ITE.
+## 👋 Hi, I’m Fasha
 
-### 🎓 Education
-- ITE student (2 year higher-nitec)
-- Course: Cyber & Network Security
-- Specialised in Networking
+🎓 ITE Year 2 student studying **Cyber & Network Security**
 
-### 🛠️ Skills
+👀 I’m interested in:
+- Networking
+- Cybersecurity fundamentals
+- Cloud technologies (AWS)
+- Linux systems & basic system hardening
+
+🛠️ Skills & Knowledge:
 - Networking fundamentals
-- Basic Python programming
-- Web development (HTML, CSS, JavaScript)
+- Basic Python scripting
+- HTML, CSS, JavaScript
 
-### 🌱 Currently Learning / Interested In
-- Amazon Web Services (AWS)
-- Linux systems
-- System hardening and security best practices
+🌱 Currently learning:
+- AWS core services
+- System hardening
 
- ### 🔍 Internship
-I am currently seeking a **6-month internship** to gain hands-on
-experience in cybersecurity, networking, and cloud technologies.
+🔧 Projects:
+- Canteen ordering website (web-based prototype)
+- Networking & cybersecurity learning labs
+-code sandbox
 
+🔍 Internship:
+Currently seeking a **6-month internship** to gain hands-on experience
+in cybersecurity, networking, and cloud technologies.
 
-I’m interested in building hands-on projects to improve my technical
-skills and gain real-world experience in cybersecurity and cloud
-technologies.
+⚒️ This GitHub profile documents my learning journey and projects as I
+continue to build my technical skills.
