@@ -20,7 +20,7 @@
 🔧 Projects:
 - Canteen ordering website (web-based prototype)
 - Networking & cybersecurity learning labs
--code sandbox
+- Code sandbox
 
 🔍 Internship:
 Currently seeking a **6-month internship** to gain hands-on experience
