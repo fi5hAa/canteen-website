@@ -1,6 +1,7 @@
 ## 👋 Hi, I’m Fasha
 
 🎓 ITE Year 2 student studying **Cyber & Network Security**
+Linkedin : www.linkedin.com/in/fashanadhirah
 
 👀 I’m interested in:
 - Networking
